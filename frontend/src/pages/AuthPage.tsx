@@ -4,7 +4,6 @@ import {
   Button,
   Card,
   CardContent,
-  Container,
   Stack,
   TextField,
   Typography,
@@ -17,6 +16,7 @@ import { useAuth } from '../auth/AuthContext'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getApiErrorMessage } from '../lib/errors'
 import { useFeedback } from '../components/FeedbackProvider'
+import { layoutShellSx } from '../lib/layoutShell'
 
 const baseSchema = z.object({
   name: z.string().optional(),
@@ -87,65 +87,67 @@ export function AuthPage({ mode }: { mode: 'login' | 'register' }) {
   }, [isRegister, login, navigate, register, showError, showSuccess])
 
   return (
-    <Container maxWidth="sm" sx={{ py: { xs: 4, sm: 8 } }}>
-      <Card variant="outlined">
-        <CardContent>
-          <Stack spacing={3}>
-            <Box>
-              <Typography variant="h4" sx={{ fontWeight: 700 }}>
-                {isRegister ? 'Create account' : 'Welcome back'}
-              </Typography>
-              <Typography color="text.secondary">
-                {isRegister
-                  ? 'Register to start managing projects and tasks.'
-                  : 'Sign in to continue to your projects.'}
-              </Typography>
-            </Box>
-            {error && <Alert severity="error">{error}</Alert>}
-            <Stack
-              component="form"
-              spacing={2}
-              onSubmit={handleSubmit(onSubmit)}
-              noValidate
-            >
-              {isRegister && (
+    <Box sx={{ minHeight: '100dvh', backgroundColor: 'background.default' }}>
+      <Box sx={{ ...layoutShellSx, py: { xs: 4, sm: 8 } }}>
+        <Card variant="outlined" sx={{ maxWidth: 480, mx: 'auto' }}>
+          <CardContent>
+            <Stack spacing={3}>
+              <Box>
+                <Typography variant="h4" sx={{ fontWeight: 700 }}>
+                  {isRegister ? 'Create account' : 'Welcome back'}
+                </Typography>
+                <Typography color="text.secondary">
+                  {isRegister
+                    ? 'Register to start managing projects and tasks.'
+                    : 'Sign in to continue to your projects.'}
+                </Typography>
+              </Box>
+              {error && <Alert severity="error">{error}</Alert>}
+              <Stack
+                component="form"
+                spacing={2}
+                onSubmit={handleSubmit(onSubmit)}
+                noValidate
+              >
+                {isRegister && (
+                  <TextField
+                    label="Name"
+                    fullWidth
+                    {...field('name')}
+                    error={Boolean(errors.name)}
+                    helperText={errors.name?.message}
+                  />
+                )}
                 <TextField
-                  label="Name"
+                  label="Email"
+                  type="email"
                   fullWidth
-                  {...field('name')}
-                  error={Boolean(errors.name)}
-                  helperText={errors.name?.message}
+                  {...field('email')}
+                  error={Boolean(errors.email)}
+                  helperText={errors.email?.message}
                 />
-              )}
-              <TextField
-                label="Email"
-                type="email"
-                fullWidth
-                {...field('email')}
-                error={Boolean(errors.email)}
-                helperText={errors.email?.message}
-              />
-              <TextField
-                label="Password"
-                type="password"
-                fullWidth
-                {...field('password')}
-                error={Boolean(errors.password)}
-                helperText={errors.password?.message}
-              />
-              <Button type="submit" variant="contained" disabled={isSubmitting}>
-                {isSubmitting ? 'Please wait...' : isRegister ? 'Register' : 'Login'}
-              </Button>
+                <TextField
+                  label="Password"
+                  type="password"
+                  fullWidth
+                  {...field('password')}
+                  error={Boolean(errors.password)}
+                  helperText={errors.password?.message}
+                />
+                <Button type="submit" variant="contained" disabled={isSubmitting}>
+                  {isSubmitting ? 'Please wait...' : isRegister ? 'Register' : 'Login'}
+                </Button>
+              </Stack>
+              <Typography variant="body2">
+                {isRegister ? 'Already have an account?' : "Don't have an account?"}{' '}
+                <Link to={isRegister ? '/login' : '/register'}>
+                  {isRegister ? 'Login' : 'Register'}
+                </Link>
+              </Typography>
             </Stack>
-            <Typography variant="body2">
-              {isRegister ? 'Already have an account?' : "Don't have an account?"}{' '}
-              <Link to={isRegister ? '/login' : '/register'}>
-                {isRegister ? 'Login' : 'Register'}
-              </Link>
-            </Typography>
-          </Stack>
-        </CardContent>
-      </Card>
-    </Container>
+          </CardContent>
+        </Card>
+      </Box>
+    </Box>
   )
 }

@@ -2,7 +2,6 @@ import {
   AppBar,
   Avatar,
   Box,
-  Container,
   Divider,
   IconButton,
   ListItemIcon,
@@ -24,6 +23,7 @@ import { useAuth } from '../auth/AuthContext'
 import { ConfirmDialog } from './ConfirmDialog'
 import { useFeedback } from './FeedbackProvider'
 import type { ThemeMode } from '../types/models'
+import { layoutShellSx } from '../lib/layoutShell'
 
 interface AppLayoutProps {
   mode: ThemeMode
@@ -66,7 +66,16 @@ function AppLayoutBase({ mode, onToggleMode }: AppLayoutProps) {
         elevation={0}
         sx={{ backdropFilter: 'blur(14px)', borderBottom: 1, borderColor: 'divider' }}
       >
-        <Toolbar sx={{ px: { xs: 2, sm: 3 }, minHeight: { xs: 56, sm: 64 } }}>
+        <Toolbar disableGutters sx={{ minHeight: { xs: 56, sm: 64 }, px: 0 }}>
+          <Box
+            sx={{
+              ...layoutShellSx,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              minHeight: { xs: 56, sm: 64 },
+            }}
+          >
           <Typography
             component={Link}
             to="/projects"
@@ -118,6 +127,7 @@ function AppLayoutBase({ mode, onToggleMode }: AppLayoutProps) {
               </IconButton>
             </Tooltip>
           </Stack>
+          </Box>
         </Toolbar>
       </AppBar>
 
@@ -180,11 +190,11 @@ function AppLayoutBase({ mode, onToggleMode }: AppLayoutProps) {
         </MenuItem>
       </Menu>
 
-      <Container maxWidth="lg" sx={{ py: { xs: 2, md: 3 } }}>
-        <Paper variant="outlined" sx={{ p: { xs: 2, md: 3 }, backgroundColor: 'background.paper' }}>
+      <Box sx={{ ...layoutShellSx, py: { xs: 2, md: 3 } }}>
+        <Paper variant="outlined" sx={{ p: { xs: 2, md: 3 }, backgroundColor: 'background.paper', width: '100%' }}>
           <Outlet />
         </Paper>
-      </Container>
+      </Box>
 
       <ConfirmDialog
         open={logoutConfirmOpen}
